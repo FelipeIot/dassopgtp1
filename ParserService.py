@@ -10,14 +10,14 @@ import json
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 8080
-TIEMPOLECTURA=30000 #miliseg
+TIEMPOLECTURA=30
 
-procesoprincipal=True
+
 
 def handler(sig, frame):  # define the handler  
     print("Signal Number:", sig, " Frame: ", frame) 
-    global procesoprincipal
-    procesoprincipal=False 
+    exit(0)
+ 
 
    
 
@@ -72,14 +72,18 @@ class Divisas:
 signal.signal(signal.SIGINT, handler) 
 ob=Divisas("config.txt")
 sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) # UDP
-while procesoprincipal==True:#en este lazo envia la trama cada cierto tiempo
-    print(ob.get_json())
-    sock.sendto(bytes(ob.get_json(), "utf-8"), (UDP_IP, UDP_PORT))
-    for i in range(TIEMPOLECTURA):
-        sleep(0.001)
-        if procesoprincipal==False:
-            break
+try:
+    while True:#en este lazo envia la trama cada cierto tiempo
+  
+        print(ob.get_json())
+        sock.sendto(bytes(ob.get_json(), "utf-8"), (UDP_IP, UDP_PORT))
+        sleep(TIEMPOLECTURA)
 
-sock.close()#cierro el puerto
-print("Cerrando")
+ 
+finally:
+    sock.close()#cierro el puerto
+    print("socket cerrado")
+
+
+
     

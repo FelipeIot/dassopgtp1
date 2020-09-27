@@ -25,7 +25,7 @@ class Divisas:
     def __init__(self,dir):
         self.dirDivisas=dir
 
-    def get_lista(self):
+    def get_lista(self): #obtine una lista a partir del csv
         try:
             with open(self.dirDivisas, "r") as f:
                 path=f.read()
@@ -41,7 +41,7 @@ class Divisas:
         lista=archivo.split('\n')
         return lista
     
-    def get_json(self):
+    def get_json(self): #apartir de la lista construye una trama con formato json
         lista=self.get_lista()
         #print(lista)
         item=[]
@@ -72,7 +72,7 @@ class Divisas:
 signal.signal(signal.SIGINT, handler) 
 ob=Divisas("config.txt")
 sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) # UDP
-while procesoprincipal==True:
+while procesoprincipal==True:#en este lazo envia la trama cada cierto tiempo
     print(ob.get_json())
     sock.sendto(bytes(ob.get_json(), "utf-8"), (UDP_IP, UDP_PORT))
     for i in range(TIEMPOLECTURA):

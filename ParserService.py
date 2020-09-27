@@ -10,7 +10,7 @@ import json
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 8080
-TIEMPOLECTURA=30
+TIEMPOLECTURA=30000 #miliseg
 
 procesoprincipal=True
 
@@ -43,6 +43,7 @@ class Divisas:
     
     def get_json(self):
         lista=self.get_lista()
+        #print(lista)
         item=[]
         try:
             for i in range(len(lista)):
@@ -72,9 +73,13 @@ signal.signal(signal.SIGINT, handler)
 ob=Divisas("config.txt")
 sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) # UDP
 while procesoprincipal==True:
+    print(ob.get_json())
     sock.sendto(bytes(ob.get_json(), "utf-8"), (UDP_IP, UDP_PORT))
-    sleep(TIEMPOLECTURA)
-    print(str(procesoprincipal))
+    for i in range(TIEMPOLECTURA):
+        sleep(0.001)
+        if procesoprincipal==False:
+            break
+
 sock.close()#cierro el puerto
 print("Cerrando")
     
